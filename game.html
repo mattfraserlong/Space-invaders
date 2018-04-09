@@ -1,8 +1,7 @@
 
 <html>
-    <!--video here: https://sites.google.com/site/wecanprogramcom/html-and-javascript/web-development-level2/lesson-2-creating-a-game-loop-and-handling-movement-->
 <head>
-<style> /*CSS for sprites*/
+<style>
 #hero {
   background: #ff0000;
   width: 20px;
@@ -10,54 +9,55 @@
   position: absolute;
 }
 #background {
-    background: #000000;
-    width: 500px;
-    height: 500px;
-    position: absolute;
-    }
+  background: #000000;
+  width: 500px;
+  height: 500px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
 #laser {
-    background: #00ff00;
-    width: 5px;
-    height: 50px;
-    position: absolute;
-    }
+  background: #00ff00;
+  width: 3px;
+  height: 50px;
+  position: absolute;
+}
+.enemy {
+  background: #0000ff;
+  width: 35px;
+  height: 35px;
+  position: absolute;
+}
 </style>
 </head>
 <body>
-<!--div for background-->
 <div id="background"></div>
-<!--div for hero sprite-->
 <div id="hero"></div>
-<!--div for hero sprite-->
-<div id = "laser"></div>
+<div id="laser"></div>
 <script>
-    
-//variables
+
 var LEFT_KEY = 37;
 var UP_KEY = 38;
 var RIGHT_KEY = 39;
 var DOWN_KEY = 40;
-var HERO_MOVEMENT = 5;
 var SPACE_KEY = 32;
+var HERO_MOVEMENT = 10;
 
 var lastLoopRun = 0;
 
-
-//function to create all sprites 
-function createSprite(element, x, y, w, h) {
-    var result = new Object();
-    result.element = element;
-    result.x = x;
-    result.y = y;
-    result.w = w;
-    result.h = h;
-    return result;
-}
-    
-//creating controller object
 var controller = new Object();
+var enemies = new Array();
 
-//handling keypresses    
+function createSprite(element, x, y, w, h) {
+  var result = new Object();
+  result.element = element;
+  result.x = x;
+  result.y = y;
+  result.w = w;
+  result.h = h;
+  return result;
+}
+
 function toggleKey(keyCode, isPressed) {
   if (keyCode == LEFT_KEY) {
     controller.left = isPressed;
@@ -73,29 +73,22 @@ function toggleKey(keyCode, isPressed) {
   }
   if (keyCode == SPACE_KEY) {
     controller.space = isPressed;
-    }
+  }  
 }
-    
-function ensureBounds(sprite){
-    if (sprite.x < 20) {
-        sprite.x = 20;
-    }
-    
-    if (sprite.y < 20) {
-        sprite.y = 20;
-    }
-    
-    if (sprite.x + sprite.w >480) {
-        sprite.x = 480 - sprite.w;
-    }
-    
-    if (sprite.y + sprite.h > 480) {
-        sprite.y = 480 - sprite.h;
-    }
-}
-    
-function updatePositions() {
-    laser.y += -10;
+
+function ensureBounds(sprite) {
+  if (sprite.x < 20) {
+    sprite.x = 20;
+  }
+  if (sprite.y < 20) {
+    sprite.y = 20;
+  }
+  if (sprite.x + sprite.w > 480) {
+    sprite.x = 480 - sprite.w;
+  }
+  if (sprite.y + sprite.h > 480) {
+    sprite.y = 480 - sprite.h;
+  }
 }
 
 function setPosition(sprite) {
@@ -119,21 +112,54 @@ function handleControls() {
   }
   if (controller.space && laser.y <= -120) {
     laser.x = hero.x + 9;
-    laser.y = hero.y - 40;
+    laser.y = hero.y - laser.h;
   }
-    
-    ensureBounds(hero);
+  
+  ensureBounds(hero);
 }
 
 function showSprites() {
-    setPosition(hero);
-    setPosition(laser);
+  setPosition(hero);
+  setPosition(laser);
+  for (var i = 0; i < enemies.length; i++) {
+    setPosition(enemies[i]);
+  }
+}
+
+function updatePositions() {
+  for (var i = 0; i < enemies.length; i++) {
+    enemies[i].y += 4;
+    enemies[i].x += getRandom(7) - 3;
+    ensureBounds(enemies[i]);
+  }
+  laser.y -= 30;
+}
+
+function addEnemy() {
+  if (getRandom(50) == 0) {
+    var elementName = 'enemy' + getRandom(10000000);
+    var enemy = createSprite(elementName, getRandom(450), -40, 35, 35);
+    
+    var element = document.createElement('div');
+    element.id = enemy.element;
+    element.className = 'enemy'; 
+    document.children[0].appendChild(element);
+    
+    enemies[enemies.length] = enemy;
+  }
+}
+
+function getRandom(maxSize) {
+  return parseInt(Math.random() * maxSize);
 }
 
 function loop() {
-  if (new Date().getTime() - lastLoopRun > 10) {
+  if (new Date().getTime() - lastLoopRun > 40) {
     updatePositions();
     handleControls();
+    
+    addEnemy();
+    
     showSprites();
     
     lastLoopRun = new Date().getTime();
@@ -148,10 +174,9 @@ document.onkeydown = function(evt) {
 document.onkeyup = function(evt) {
   toggleKey(evt.keyCode, false);
 };
-    
-//assigning sprite objects to variable   
-var hero = createSprite("hero", 250, 450, 20, 20);
-var laser = createSprite("laser", 0, -1000, 5, 10);
+
+var hero = createSprite('hero', 250, 460, 20, 20);
+var laser = createSprite('laser', 0, -120, 2, 50);
 
 loop();
 
