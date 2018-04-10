@@ -1,4 +1,3 @@
-
 <html>
 <head>
 <style>
@@ -13,12 +12,12 @@
   width: 500px;
   height: 500px;
   position: absolute;
-  left: 250px;
-  top: 50px;
+  left: 0px;
+  top: 0px;
 }
 #laser {
   background: #00ff00;
-  width: 3px;
+  width: 4px;
   height: 50px;
   position: absolute;
 }
@@ -41,7 +40,7 @@ var UP_KEY = 38;
 var RIGHT_KEY = 39;
 var DOWN_KEY = 40;
 var SPACE_KEY = 32;
-var HERO_MOVEMENT = 10;
+var HERO_MOVEMENT = 20;
 
 var lastLoopRun = 0;
 
@@ -76,18 +75,22 @@ function toggleKey(keyCode, isPressed) {
   }  
 }
 
-function ensureBounds(sprite) {
-  if (sprite.x < 270) {
-    sprite.x = 270;
+function intersects(a, b) {
+  return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+}
+
+function ensureBounds(sprite, ignoreY) {
+  if (sprite.x < 20) {
+    sprite.x = 20;
   }
-  if (sprite.y < 70) {
-    sprite.y = 70;
+  if (!ignoreY && sprite.y < 20) {
+    sprite.y = 20;
   }
-  if (sprite.x + sprite.w > 530) {
-    sprite.x = 530 - sprite.w;
+  if (sprite.x + sprite.w > 480) {
+    sprite.x = 480 - sprite.w;
   }
-  if (sprite.y + sprite.h > 530) {
-    sprite.y = 530 - sprite.h;
+  if (!ignoreY && sprite.y + sprite.h > 480) {
+    sprite.y = 480 - sprite.h;
   }
 }
 
@@ -118,6 +121,28 @@ function handleControls() {
   ensureBounds(hero);
 }
 
+function checkCollisions() {
+  for (var i = 0; i < enemies.length; i++) {
+    if (intersects(laser, enemies[i])) {
+      var element = document.getElementById(enemies[i].element);
+      element.style.visibility = 'hidden';
+      element.parentNode.removeChild(element);
+      enemies.splice(i, 1);
+      i--;
+      laser.y = -laser.h;
+    } else if (intersects(hero, enemies[i])) {
+      var element = document.getElementById(hero.element);
+      element.style.visibility = 'hidden';
+    } else if (enemies[i].y + enemies[i].h >= 500) {
+      var element = document.getElementById(enemies[i].element);
+      element.style.visibility = 'hidden';
+      element.parentNode.removeChild(element);
+      enemies.splice(i, 1);
+      i--;
+    }
+  }
+}
+
 function showSprites() {
   setPosition(hero);
   setPosition(laser);
@@ -130,15 +155,15 @@ function updatePositions() {
   for (var i = 0; i < enemies.length; i++) {
     enemies[i].y += 4;
     enemies[i].x += getRandom(7) - 3;
-    ensureBounds(enemies[i]);
+    ensureBounds(enemies[i], true);
   }
-  laser.y -= 30;
+  laser.y -= 12;
 }
 
 function addEnemy() {
   if (getRandom(50) == 0) {
     var elementName = 'enemy' + getRandom(10000000);
-    var enemy = createSprite(elementName, getRandom(700) + 250, -40, 35, 35);
+    var enemy = createSprite(elementName, getRandom(450), -40, 35, 35);
     
     var element = document.createElement('div');
     element.id = enemy.element;
@@ -157,6 +182,7 @@ function loop() {
   if (new Date().getTime() - lastLoopRun > 40) {
     updatePositions();
     handleControls();
+    checkCollisions();
     
     addEnemy();
     
@@ -175,7 +201,7 @@ document.onkeyup = function(evt) {
   toggleKey(evt.keyCode, false);
 };
 
-var hero = createSprite('hero', 500, 510, 20, 20);
+var hero = createSprite('hero', 250, 460, 20, 20);
 var laser = createSprite('laser', 0, -120, 2, 50);
 
 loop();
