@@ -34,8 +34,7 @@
     
     function controller() {
         document.addEventListener("keydown", function(e){
-            console.log(e);
-            
+            console.log(e.keyCode);
         })
         
         
@@ -48,7 +47,6 @@
             checkCollisions();
             controller();
             lastLoop = new Date().getTime();
-            console.log(lastLoop);
         }
         setTimeout(gameLoop, 2);          
     }
