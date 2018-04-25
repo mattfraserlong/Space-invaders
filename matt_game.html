@@ -1,0 +1,54 @@
+<html>
+<div id="background">
+</div>
+<div id="hero">
+</div>
+
+<style>
+    #background {
+        background-color: #000000;
+        width: 600px;
+        height: 500px;
+        position: absolute;
+    }
+    #hero {
+        background-color: #00ff00;
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        left: 285;
+        top: 450;
+    }
+</style>
+    
+    
+    
+    
+<script>
+    let lastLoop = 0;
+    
+    function drawHero() {}
+    function updateGame() {}
+    function checkCollisions() {}
+    function controller() {}
+    
+    function gameLoop() {
+        if (new Date().getTime() - lastLoop > 40) {
+            drawHero();
+            updateGame();
+            checkCollisions();
+            controller();
+            
+            lastLoop = new Date().getTime();
+        }
+        setTimeout(gameLoop, 2);          
+    }
+    
+    gameLoop();
+    
+</script>
+    
+    
+    
+    
+</html>
