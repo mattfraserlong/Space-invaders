@@ -30,7 +30,16 @@
     function drawHero() {}
     function updateGame() {}
     function checkCollisions() {}
-    function controller() {}
+    
+    
+    function controller() {
+        document.addEventListener("keydown", function(e){
+            console.log(e);
+            
+        })
+        
+        
+    }
     
     function gameLoop() {
         if (new Date().getTime() - lastLoop > 40) {
@@ -38,8 +47,8 @@
             updateGame();
             checkCollisions();
             controller();
-            
             lastLoop = new Date().getTime();
+            console.log(lastLoop);
         }
         setTimeout(gameLoop, 2);          
     }
