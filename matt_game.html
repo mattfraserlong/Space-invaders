@@ -16,25 +16,35 @@
         width: 30px;
         height: 30px;
         position: absolute;
-        left: 285;
-        top: 450;
     }
 </style>
-    
-    
-    
+     
     
 <script>
+    const hero = document.getElementById("hero");
+    let top = 285;
     let lastLoop = 0;
     
-    function drawHero() {}
+    function drawSprite(spriteName, x, y) {
+        spriteName.style.left = 250px;
+    }
+    
+    
     function updateGame() {}
     function checkCollisions() {}
     
     
     function controller() {
         document.addEventListener("keydown", function(e){
-            console.log(e.keyCode);
+            if (e.keyCode === 37) {
+                //move left
+            }
+            if (e.keyCode === 39) {
+                //move right
+                }
+            if (e.keyCode === 32) {
+                //launch rocket
+            }
         })
         
         
@@ -42,7 +52,7 @@
     
     function gameLoop() {
         if (new Date().getTime() - lastLoop > 40) {
-            drawHero();
+            drawSprite(hero);
             updateGame();
             checkCollisions();
             controller();
