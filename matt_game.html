@@ -22,11 +22,15 @@
     
 <script>
     const hero = document.getElementById("hero");
-    let top = 285;
+    let heroPosX = 285;
+    let heroPosY = 470;
     let lastLoop = 0;
+    let heroSpeed = .5;
     
     function drawSprite(spriteName, x, y) {
-        spriteName.style.left = 250px;
+        hero.style.left = x;
+        hero.style.top = y;
+        return;
     }
     
     
@@ -37,10 +41,10 @@
     function controller() {
         document.addEventListener("keydown", function(e){
             if (e.keyCode === 37) {
-                //move left
+                heroPosX -= heroSpeed;
             }
             if (e.keyCode === 39) {
-                //move right
+                heroPosX += heroSpeed;
                 }
             if (e.keyCode === 32) {
                 //launch rocket
@@ -52,13 +56,14 @@
     
     function gameLoop() {
         if (new Date().getTime() - lastLoop > 40) {
-            drawSprite(hero);
+            drawSprite(hero, heroPosX, heroPosY);
+            console.log(heroPosX);
             updateGame();
             checkCollisions();
             controller();
             lastLoop = new Date().getTime();
         }
-        setTimeout(gameLoop, 2);          
+        setTimeout(gameLoop, 10);          
     }
     
     gameLoop();
