@@ -12,8 +12,8 @@
   width: 500px;
   height: 500px;
   position: absolute;
-  left: 0px;
-  top: 0px;
+  left: 20px;
+  top: 20px;
 }
 
 </style>
@@ -34,6 +34,21 @@ let lastLoopRun = 0;
 
 let controller = new Object();
 let enemies = new Array();
+    
+function ensureBounds() {
+    if (hero.x >= 480) {
+        hero.x = 480;
+    }
+    if (hero.x <= 40) {
+        hero.x = 40;
+    }
+    if (hero.y >= 480) {
+        hero.y = 480;
+    }
+    if (hero.y <= 40) {
+        hero.y = 40;
+    }
+}
 
 function createSprite(element, x, y, w, h) {
     result = new Object();
@@ -97,7 +112,9 @@ function showSprites() {
 function loop() {
   if (new Date().getTime() - lastLoopRun > 40) {
     handleControls();
+    ensureBounds();
     showSprites();
+
     
     lastLoopRun = new Date().getTime();
   }
