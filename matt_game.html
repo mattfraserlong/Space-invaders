@@ -16,6 +16,13 @@
   top: 20px;
 }
 
+#laser {
+  background: #00ff00;
+  width: 4px;
+  height: 50px;
+  position: absolute;
+}
+
 </style>
 </head>
 <body>
@@ -51,7 +58,7 @@ function ensureBounds() {
 }
 
 function createSprite(element, x, y, w, h) {
-    result = new Object();
+result = new Object();
   result.element = element;
   result.x = x;
   result.y = y;
