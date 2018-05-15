@@ -28,6 +28,7 @@
 <body>
 <div id="background"></div>
 <div id="hero"></div>
+<div id="laser"></div>
 <script>
 
 let LEFT_KEY = 37;
@@ -36,11 +37,11 @@ let RIGHT_KEY = 39;
 let DOWN_KEY = 40;
 let SPACE_KEY = 32;
 let HERO_MOVEMENT = 20;
+let LASER_SPEED = 20;
 
 let lastLoopRun = 0;
 
 let controller = new Object();
-let enemies = new Array();
     
 function ensureBounds() {
     if (hero.x >= 480) {
@@ -88,8 +89,13 @@ function toggleKey(keyCode, isPressed) {
 
 function setPosition(sprite) {
   var e = document.getElementById(sprite.element);
+    if (sprite === "laser") {
+        e.style.top = (sprite.y + LASER_SPEED) + 'px';
+        console.log(sprite);
+    } else {
   e.style.left = sprite.x + 'px';
   e.style.top = sprite.y + 'px';
+}
 }
 
 function handleControls() {
@@ -105,14 +111,15 @@ function handleControls() {
   if (controller.right) {
     hero.x += HERO_MOVEMENT;
   }
-  if (controller.space && laser.y <= -120) {
-    laser.x = hero.x + 9;
-    laser.y = hero.y - laser.h;
+  if (controller.space) {
+    laser.x = hero.x + 8;
+    laser.y = hero.y - 50;
   }
 }
 
 function showSprites() {
-  setPosition(hero);
+    setPosition(hero);
+    setPosition(laser);
 }
 
 
@@ -137,6 +144,7 @@ document.onkeyup = function(evt) {
 };
 
 var hero = createSprite('hero', 250, 460, 20, 20);
+var laser = createSprite('laser', 5, 20, 10,10);
 
 loop();
 
