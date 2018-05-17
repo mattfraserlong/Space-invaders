@@ -37,7 +37,7 @@ let RIGHT_KEY = 39;
 let DOWN_KEY = 40;
 let SPACE_KEY = 32;
 let HERO_MOVEMENT = 20;
-let LASER_SPEED = 20;
+let LASER_SPEED = 1;
 
 let lastLoopRun = 0;
 
@@ -89,9 +89,14 @@ function toggleKey(keyCode, isPressed) {
 
 function setPosition(sprite) {
   var e = document.getElementById(sprite.element);
-    if (sprite === "laser") {
-        e.style.top = (sprite.y + LASER_SPEED) + 'px';
-        console.log(sprite);
+    if (sprite.element === "laser") {
+//see if you can sort this laser firing loop out....
+        for (let i = sprite.y; i > 10; i--) {
+            console.log(sprite.y - i);
+            e.style.left = sprite.x + 'px';
+            e.style.top = (sprite.y - i) + 'px';
+        }
+        
     } else {
   e.style.left = sprite.x + 'px';
   e.style.top = sprite.y + 'px';
