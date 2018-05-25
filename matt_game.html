@@ -89,18 +89,8 @@ function toggleKey(keyCode, isPressed) {
 
 function setPosition(sprite) {
   var e = document.getElementById(sprite.element);
-    if (sprite.element === "laser") {
-//see if you can sort this laser firing loop out....
-        for (let i = sprite.y; i > 10; i--) {
-            console.log(sprite.y - i);
-            e.style.left = sprite.x + 'px';
-            e.style.top = (sprite.y - i) + 'px';
-        }
-        
-    } else {
   e.style.left = sprite.x + 'px';
   e.style.top = sprite.y + 'px';
-}
 }
 
 function handleControls() {
