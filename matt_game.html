@@ -1,148 +1,160 @@
 <html>
+
 <head>
-<style>
-#hero {
-  background: #ff0000;
-  width: 20px;
-  height: 20px;
-  position: absolute;
-}
-#background {
-  background: #000000;
-  width: 500px;
-  height: 500px;
-  position: absolute;
-  left: 20px;
-  top: 20px;
-}
+    <style>
+        #hero {
+            background: #ff0000;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+        }
 
-#laser {
-  background: #00ff00;
-  width: 4px;
-  height: 50px;
-  position: absolute;
-}
+        #background {
+            background: #000000;
+            width: 500px;
+            height: 500px;
+            position: absolute;
+            left: 20px;
+            top: 20px;
+        }
 
-</style>
+        #laser {
+            background: #00ff00;
+            width: 4px;
+            height: 50px;
+            position: absolute;
+        }
+
+    </style>
 </head>
+
 <body>
-<div id="background"></div>
-<div id="hero"></div>
-<div id="laser"></div>
-<script>
+    <div id="background"></div>
+    <div id="hero"></div>
+    <div id="laser"></div>
+    <script>
+        let LEFT_KEY = 37;
+        let UP_KEY = 38;
+        let RIGHT_KEY = 39;
+        let DOWN_KEY = 40;
+        let SPACE_KEY = 32;
+        let HERO_MOVEMENT = 20;
+        let LASER_SPEED = 10;
 
-let LEFT_KEY = 37;
-let UP_KEY = 38;
-let RIGHT_KEY = 39;
-let DOWN_KEY = 40;
-let SPACE_KEY = 32;
-let HERO_MOVEMENT = 20;
-let LASER_SPEED = 1;
+        let lastLoopRun = 0;
 
-let lastLoopRun = 0;
+        let controller = new Object();
 
-let controller = new Object();
-    
-function ensureBounds() {
-    if (hero.x >= 480) {
-        hero.x = 480;
-    }
-    if (hero.x <= 40) {
-        hero.x = 40;
-    }
-    if (hero.y >= 480) {
-        hero.y = 480;
-    }
-    if (hero.y <= 40) {
-        hero.y = 40;
-    }
-}
+        function ensureBounds() {
+            if (hero.x >= 480) {
+                hero.x = 480;
+            }
+            if (hero.x <= 40) {
+                hero.x = 40;
+            }
+            if (hero.y >= 480) {
+                hero.y = 480;
+            }
+            if (hero.y <= 40) {
+                hero.y = 40;
+            }
+            if (laser.y <=20) {
+                laser.y = -120;
+            }
+        }
 
-function createSprite(element, x, y, w, h) {
-result = new Object();
-  result.element = element;
-  result.x = x;
-  result.y = y;
-  result.w = w;
-  result.h = h;
-  return result;
-}
+        function createSprite(element, x, y, w, h) {
+            spriteObj = new Object();
+            spriteObj.element = element;
+            spriteObj.x = x;
+            spriteObj.y = y;
+            spriteObj.w = w;
+            spriteObj.h = h;
+            return spriteObj;
+        }
 
-function toggleKey(keyCode, isPressed) {
-  if (keyCode == LEFT_KEY) {
-    controller.left = isPressed;
-  }
-  if (keyCode == RIGHT_KEY) {
-    controller.right = isPressed;
-  }
-  if (keyCode == UP_KEY) {
-    controller.up = isPressed;
-  }
-  if (keyCode == DOWN_KEY) {
-    controller.down = isPressed;
-  }
-  if (keyCode == SPACE_KEY) {
-    controller.space = isPressed;
-  }  
-}
+        function toggleKey(keyCode, isPressed) {
+            if (keyCode == LEFT_KEY) {
+                controller.left = isPressed;
+            }
+            if (keyCode == RIGHT_KEY) {
+                controller.right = isPressed;
+            }
+            if (keyCode == UP_KEY) {
+                controller.up = isPressed;
+            }
+            if (keyCode == DOWN_KEY) {
+                controller.down = isPressed;
+            }
+            if (keyCode == SPACE_KEY) {
+                controller.space = isPressed;
+            }
+        }
 
+        function updatePositions() {
+            laser.y -= 12;
 
-function setPosition(sprite) {
-  var e = document.getElementById(sprite.element);
-  e.style.left = sprite.x + 'px';
-  e.style.top = sprite.y + 'px';
-}
-
-function handleControls() {
-  if (controller.up) {
-    hero.y -= HERO_MOVEMENT;
-  }
-  if (controller.down) {
-    hero.y += HERO_MOVEMENT;
-  }
-  if (controller.left) {
-    hero.x -= HERO_MOVEMENT;
-  }
-  if (controller.right) {
-    hero.x += HERO_MOVEMENT;
-  }
-  if (controller.space) {
-    laser.x = hero.x + 8;
-    laser.y = hero.y - 50;
-  }
-}
-
-function showSprites() {
-    setPosition(hero);
-    setPosition(laser);
-}
+        }
 
 
-function loop() {
-  if (new Date().getTime() - lastLoopRun > 40) {
-    handleControls();
-    ensureBounds();
-    showSprites();
+        function setPosition(sprite) {
+            var e = document.getElementById(sprite.element);
+            e.style.left = sprite.x + 'px';
+            e.style.top = sprite.y + 'px';
+        }
 
-    
-    lastLoopRun = new Date().getTime();
-  }
-  setTimeout('loop();', 2);
-}
+        function handleControls() {
+            if (controller.up) {
+                hero.y -= HERO_MOVEMENT;
+            }
+            if (controller.down) {
+                hero.y += HERO_MOVEMENT;
+            }
+            if (controller.left) {
+                hero.x -= HERO_MOVEMENT;
+            }
+            if (controller.right) {
+                hero.x += HERO_MOVEMENT;
+            }
+            if (controller.space & laser.y <= -120) {
+                laser.x = hero.x + 8;
+                laser.y = hero.y - 50;
+            }
+            ensureBounds();
+        }
 
-document.onkeydown = function(evt) {
-  toggleKey(evt.keyCode, true);
-};
+        function showSprites() {
+            setPosition(hero);
+            setPosition(laser);
+        }
 
-document.onkeyup = function(evt) {
-  toggleKey(evt.keyCode, false);
-};
 
-var hero = createSprite('hero', 250, 460, 20, 20);
-var laser = createSprite('laser', 5, 20, 10,10);
+        function loop() {
+            if (new Date().getTime() - lastLoopRun > 40) {
+                updatePositions();
+                handleControls();
 
-loop();
+                showSprites();
 
-</script>
+                lastLoopRun = new Date().getTime();
+            }
+            setTimeout('loop();', 2);
+        }
+
+        document.onkeydown = function(evt) {
+            toggleKey(evt.keyCode, true);
+        };
+
+        document.onkeyup = function(evt) {
+            toggleKey(evt.keyCode, false);
+        };
+
+        var hero = createSprite('hero', 250, 460, 20, 20);
+        var laser = createSprite('laser', 5, -120, 10, 10);
+
+        loop();
+
+    </script>
 </body>
+
 </html>
