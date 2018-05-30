@@ -155,12 +155,15 @@
                 var element = document.getElementById(enemy.element);
                 enemy.y = 40;
                 enemy.x = (RandomNumber(460) + 40)
+                laser.x = -120;
                 console.log('hit');
                 //element.parentNode.removeChild(element);
             } else if (intersects(hero, enemy)) {
                 var element = document.getElementById(hero.element);
                 enemy.y = 40;
                 enemy.x = (RandomNumber(460) + 40)
+                hero.x = 250;
+                hero.y = 460;   
                 //element.style.visibility = 'hidden';
                 console.log('hit');
             } else if (enemy.y >= 480) {
