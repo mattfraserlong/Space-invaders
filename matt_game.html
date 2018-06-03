@@ -53,6 +53,7 @@
         let lastLoopRun = 0;
 
         let controller = new Object();
+        let enemy = new Array();
 
         function ensureBounds() {
             if (hero.x >= 480) {
@@ -72,7 +73,7 @@
             }
             if (enemy.y >= 480) {
                 enemy.y = 30;
-                enemy.x = (RandomNumber(440) + 40)
+                enemy.x = (randomNumber(440) + 40)
             }
         }
 
@@ -84,6 +85,14 @@
             spriteObj.w = w;
             spriteObj.h = h;
             return spriteObj;
+        }
+//this funtion needs to be completed....!!!!!!!!!!
+        function addEnemy() {
+            if(randomNumber(40) === 0) {
+                let enemyName = 'enemy' + randomNumber(10000000);
+                createSprite(enemyName, (randomNumber(440) + 40), 40, 30, 30);
+                console.log(enemy);
+            }
         }
 
         function toggleKey(keyCode, isPressed) {
@@ -106,14 +115,16 @@
 
         function updatePositions() {
             laser.y -= LASER_SPEED;
-            enemy.y += ENEMY_SPEED;
+            //for (let i = 0; i <= enemy.length; i++) {
+              //  enemy[i].y += ENEMY_SPEED;
+            //}
         }
 
         function intersects(a, b) {
             return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
         }
 
-        function RandomNumber(maxSize) {
+        function randomNumber(maxSize) {
             return parseInt(Math.random() * maxSize);
         }
 
@@ -147,30 +158,34 @@
         function showSprites() {
             setPosition(hero);
             setPosition(laser);
-            setPosition(enemy);
+            for (i = 0; i <= enemy.length; i++) {
+                setPosition(enemy[i]);
+            }
         }
 
         function checkCollisions() {
-            if (intersects(laser, enemy)) {
-                var element = document.getElementById(enemy.element);
-                enemy.y = 40;
-                enemy.x = (RandomNumber(460) + 40)
-                laser.x = -120;
-                console.log('hit');
-                //element.parentNode.removeChild(element);
-            } else if (intersects(hero, enemy)) {
-                var element = document.getElementById(hero.element);
-                enemy.y = 40;
-                enemy.x = (RandomNumber(460) + 40)
-                hero.x = 250;
-                hero.y = 460;   
-                //element.style.visibility = 'hidden';
-                console.log('hit');
-            } else if (enemy.y >= 480) {
-                var element = document.getElementById(enemy.element);
-                element.style.visibility = 'hidden';
-                //element.parentNode.removeChild(element);
-                console.log('hit');
+            for (i = 0; i <= enemy.length; i++) {
+                if (intersects(laser, enemy[i])) {
+                    var element = document.getElementById(enemy[i].element);
+                    enemy[i].y = 40;
+                    enemy[i].x = (randomNumber(460) + 40)
+                    laser.x = -120;
+                    console.log('hit');
+                    //element.parentNode.removeChild(element);
+                } else if (intersects(hero, enemy[i])) {
+                    var element = document.getElementById(hero.element);
+                    enemy[i].y = 40;
+                    enemy[i].x = (randomNumber(460) + 40)
+                    hero.x = 250;
+                    hero.y = 460;
+                    //element.style.visibility = 'hidden';
+                    console.log('hit');
+                } else if (enemy[i].y >= 480) {
+                    var element = document.getElementById(enemy[i].element);
+                    element.style.visibility = 'hidden';
+                    //element.parentNode.removeChild(element);
+                    console.log('hit');
+                }
             }
         }
 
@@ -181,8 +196,10 @@
                 handleControls();
                 checkCollisions();
 
+                addEnemy();
+
                 showSprites();
-                
+
 
                 lastLoopRun = new Date().getTime();
             }
@@ -199,7 +216,7 @@
 
         var hero = createSprite('hero', 250, 460, 20, 20);
         var laser = createSprite('laser', 5, -120, 10, 10);
-        var enemy = createSprite('enemy', (RandomNumber(440) + 40), 30, 30, 30)
+        //var enemy = createSprite('enemy', (randomNumber(440) + 40), 30, 30, 30)
 
         loop();
 
