@@ -2,7 +2,6 @@
 
 <head>
     <style>
-
         #background {
             background: #000000;
             width: 500px;
@@ -41,15 +40,21 @@
             spriteObj.h = h;
             return spriteObj;
         }
-//array enemies being created, just need to create a div for each enemy.
+        //array enemies being created, just need to create a div for each enemy.
         function addEnemy() {
-            if(randomNumber(40) === 0) {
+            if (randomNumber(60) === 0) {
                 let elementName = 'enemy' + randomNumber(10000000);
                 let enemy = createSprite(elementName, (randomNumber(440) + 40), 40, 30, 30);
-                
+
                 enemies[enemies.length] = enemy;
-                
-                console.log(enemies);
+
+                var element = document.createElement('div');
+                element.id = enemy.element;
+                element.className = 'enemy';
+                document.children[0].appendChild(element);
+
+
+                console.log(enemy);
             }
         }
 
