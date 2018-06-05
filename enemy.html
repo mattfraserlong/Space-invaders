@@ -11,7 +11,7 @@
             top: 20px;
         }
 
-        #enemy {
+        .enemy {
             background: #0000ff;
             width: 30px;
             height: 30px;
@@ -23,7 +23,7 @@
 
 <body>
     <div id="background"></div>
-    <div id="enemy"></div>
+    <!--<div id="enemy"></div>-->
     <script>
         let ENEMY_SPEED = 10;
 
@@ -51,17 +51,17 @@
                 var element = document.createElement('div');
                 element.id = enemy.element;
                 element.className = 'enemy';
-                document.children[0].appendChild(element);
+                document.body.insertBefore(element, document.body.childNodes[2]);
 
 
-                console.log(enemy);
+                console.log(enemies);
             }
         }
 
 
         function updatePositions() {
-            for (let i = 0; i <= enemy.length; i++) {
-                enemy[i].y += ENEMY_SPEED;
+            for (let i = 0; i <= enemies.length; i++) {
+                enemies[i].y += ENEMY_SPEED;
             }
         }
 
