@@ -40,7 +40,7 @@
             spriteObj.h = h;
             return spriteObj;
         }
-        //array enemies being created, just need to create a div for each enemy.
+        
         function addEnemy() {
             if (randomNumber(60) === 0) {
                 let elementName = 'enemy' + randomNumber(10000000);
@@ -60,7 +60,7 @@
 
 
         function updatePositions() {
-            for (let i = 0; i <= enemies.length; i++) {
+            for (let i = 0; i < enemies.length; i++) {
                 enemies[i].y += ENEMY_SPEED;
             }
         }
@@ -79,18 +79,17 @@
 
 
         function showSprites() {
-            for (i = 0; i <= enemy.length; i++) {
-                setPosition(enemy[i]);
+            for (i = 0; i < enemies.length; i++) {
+                setPosition(enemies[i]);
             }
         }
 
 
         function loop() {
             if (new Date().getTime() - lastLoopRun > 40) {
-                updatePositions();
 
                 addEnemy();
-
+                updatePositions();
                 showSprites();
 
 
