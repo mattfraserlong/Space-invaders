@@ -167,28 +167,29 @@
             }
         }
 
+
         function checkCollisions() {
-            for (i = 0; i < enemies.length; i++) {
+            for (var i = 0; i < enemies.length; i++) {
                 if (intersects(laser, enemies[i])) {
                     var element = document.getElementById(enemies[i].element);
-                    enemies[i].y = 40;
-                    enemies[i].x = (randomNumber(460) + 40)
-                    laser.x = -120;
-                    console.log('hit');
-                    element.parentNode.removeChild(element);
-                } else if (intersects(hero, enemies[i])) {
-                    var element = document.getElementById(hero.element);
-                    enemies[i].y = 40;
-                    enemies[i].x = (randomNumber(460) + 40)
-                    hero.x = 250;
-                    hero.y = 460;
                     element.style.visibility = 'hidden';
-                    console.log('hit');
-                } else if (enemies[i].y >= 480) {
+                    element.parentNode.removeChild(element);
+                    enemies.splice(i, 1);
+                    i--;
+                    laser.y = -150;
+                } else if (intersects(hero, enemies[i])) {
+                    var element = document.getElementById(enemies[i].element);
+                    element.parentNode.removeChild(element);
+                    enemies.splice(i, 1);
+                    i--;
+                    hero.y = 450;
+                    hero.x = 250;
+                } else if (enemies[i].y + enemies[i].h >= 500) {
                     var element = document.getElementById(enemies[i].element);
                     element.style.visibility = 'hidden';
-                    //element.parentNode.removeChild(element);
-                    console.log('hit');
+                    element.parentNode.removeChild(element);
+                    enemies.splice(i, 1);
+                    i--;
                 }
             }
         }
