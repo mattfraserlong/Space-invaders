@@ -110,8 +110,8 @@
         let controller = new Object();
         let enemies = new Array();
         let score = 0;
-        let livesNumber = 1;
-        let gBreak = true;
+        let livesNumber = 0;
+        let gBrakeFlag = true;
 
 
         function ensureBounds(sprite, ignoreY) {
@@ -140,7 +140,7 @@
         }
 
         function addEnemy() {
-            if (randomNumber(60) === 0) {
+            if (randomNumber(50) === 0) {
                 let elementName = 'enemy' + randomNumber(10000000);
                 let enemy = createSprite(elementName, (randomNumber(440) + 40), 40, 30, 30);
                 enemies[enemies.length] = enemy;
@@ -186,6 +186,7 @@
         }
 
         function gameOver() {
+            console.log("gameover called");
             let endGame = document.getElementById("endGame");
             endGame.style.color = "#ffffff";
             livesNumber = 1;
@@ -233,7 +234,7 @@
             score.innerHTML = tally;
         }
 
-//livesNumber counting not working
+        //livesNumber counting not working
         function checkCollisions() {
             for (var i = 0; i < enemies.length; i++) {
                 if (intersects(laser, enemies[i])) {
@@ -246,6 +247,7 @@
                     score += 1;
                     scoreUpdate(score);
                 } else if (intersects(hero, enemies[i])) {
+                    livesNumber += 1;
                     var element = document.getElementById(enemies[i].element);
                     var lives = document.getElementById("lives" + livesNumber);
                     element.parentNode.removeChild(element);
@@ -254,9 +256,8 @@
                     hero.y = 480;
                     hero.x = 250;
                     lives.style.visibility = "hidden";
-                    livesNumber += 1;
                     console.log(livesNumber);
-                    if (livesNumber === 3) {
+                    if (livesNumber >= 3) {
                         gameOver();
                     }
                 } else if (enemies[i].y + enemies[i].h >= 500) {
@@ -272,10 +273,9 @@
             }
         }
 
-        //use break flag here for when calling gameOver();
-        function loop(gBreak) {
-            if (gBreak === true) {
-                if (new Date().getTime() - lastLoopRun > 40) {
+
+        function loop() {
+            if (new Date().getTime() - lastLoopRun > 40) {
                 updatePositions();
                 handleControls();
                 checkCollisions();
@@ -284,13 +284,9 @@
 
                 showSprites();
 
-
                 lastLoopRun = new Date().getTime();
-                }
-            setTimeout('loop();', 10);
-            } else {
-                gameOver();
             }
+            setTimeout('loop();', 10);
         }
 
         document.onkeydown = function(evt) {
@@ -304,7 +300,7 @@
         var hero = createSprite('hero', 250, 480, 20, 20);
         var laser = createSprite('laser', 5, -120, 10, 10);
 
-        loop(gBreak);
+        loop();
 
     </script>
 </body>
