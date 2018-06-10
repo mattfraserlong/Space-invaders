@@ -32,6 +32,54 @@
             position: absolute;
         }
 
+        #score {
+            color: #ffffff;
+            position: absolute;
+            top: 35px;
+            left: 50px;
+            font-size: 20px;
+            
+        }
+
+        .lives {
+            background: #ff0000;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+        }
+
+        #lives1 {
+            background: #ff0000;
+            width: 20px;
+            height: 20px;
+            top: 40px;
+            left: 400px;
+        }
+
+        #lives2 {
+            background: #ff0000;
+            width: 20px;
+            height: 20px;
+            top: 40px;
+            left: 430px;
+        }
+
+        #lives3 {
+            background: #ff0000;
+            width: 20px;
+            height: 20px;
+            top: 40px;
+            left: 460px;
+        }
+        
+        #endGame {
+            background: #ff0000;
+            top: 250px;
+            left: 250px;
+            font-size: 100px;
+            display: none;
+        }
+
     </style>
 </head>
 
@@ -39,6 +87,12 @@
     <div id="background"></div>
     <div id="hero"></div>
     <div id="laser"></div>
+    <div id="score">000</div>
+    <div class="lives" id="lives1"></div>
+    <div class="lives" id="lives2"></div>
+    <div class="lives" id="lives3"></div>
+    <div id="endGame">Game Over</div>
+
 
     <script>
         let LEFT_KEY = 37;
@@ -47,27 +101,29 @@
         let DOWN_KEY = 40;
         let SPACE_KEY = 32;
         let HERO_MOVEMENT = 20;
-        let LASER_SPEED = 10;
-        let ENEMY_SPEED = 10;
+        let LASER_SPEED = 17;
+        let ENEMY_SPEED = 7;
 
         let lastLoopRun = 0;
 
         let controller = new Object();
         let enemies = new Array();
+        let score = 0;
+        let livesNumber = 1;
 
 
         function ensureBounds(sprite, ignoreY) {
-            if (sprite.x < 20) {
-                sprite.x = 20;
+            if (sprite.x < 40) {
+                sprite.x = 40;
             }
-            if (!ignoreY && sprite.y < 20) {
-                sprite.y = 20;
+            if (!ignoreY && sprite.y < 40) {
+                sprite.y = 40;
             }
-            if (sprite.x + sprite.w > 480) {
-                sprite.x = 480 - sprite.w;
+            if (sprite.x + sprite.w > 500) {
+                sprite.x = 500 - sprite.w;
             }
-            if (!ignoreY && sprite.y + sprite.h > 480) {
-                sprite.y = 480 - sprite.h;
+            if (!ignoreY && sprite.y + sprite.h > 500) {
+                sprite.y = 500 - sprite.h;
             }
         }
 
@@ -131,6 +187,12 @@
         function randomNumber(maxSize) {
             return parseInt(Math.random() * maxSize);
         }
+        
+        function gameOver() {
+            let endGame = document.getElementById("endGame");
+            endGame.display = "block";
+            livesNumber = 1;
+        }
 
 
         function setPosition(sprite) {
@@ -167,6 +229,11 @@
             }
         }
 
+        function scoreUpdate(tally) {
+            let score = document.getElementById('score');
+            score.innerHTML = tally;
+        }
+
 
         function checkCollisions() {
             for (var i = 0; i < enemies.length; i++) {
@@ -176,14 +243,23 @@
                     element.parentNode.removeChild(element);
                     enemies.splice(i, 1);
                     i--;
-                    laser.y = -150;
+                    laser.y = -120;
+                    score += 1;
+                    scoreUpdate(score);
                 } else if (intersects(hero, enemies[i])) {
                     var element = document.getElementById(enemies[i].element);
+                    var lives = document.getElementById("lives" + livesNumber);
                     element.parentNode.removeChild(element);
                     enemies.splice(i, 1);
                     i--;
-                    hero.y = 450;
+                    hero.y = 480;
                     hero.x = 250;
+                    lives.style.visibility = "hidden";
+                    livesNumber +=1;
+                    console.log(livesNumber);
+                    if (livesNumber === 3) {
+                        gameOver();
+                    }
                 } else if (enemies[i].y + enemies[i].h >= 500) {
                     var element = document.getElementById(enemies[i].element);
                     element.style.visibility = 'hidden';
@@ -192,10 +268,13 @@
                     i--;
                 }
             }
+            if (laser.y < 20) {
+                laser.y = -120;
+            }
         }
 
-
-        function loop() {
+//use break flag here for when calling gameOver();
+        function loop(break) {
             if (new Date().getTime() - lastLoopRun > 40) {
                 updatePositions();
                 handleControls();
@@ -208,7 +287,7 @@
 
                 lastLoopRun = new Date().getTime();
             }
-            setTimeout('loop();', 2);
+            setTimeout('loop();', 10);
         }
 
         document.onkeydown = function(evt) {
@@ -219,7 +298,7 @@
             toggleKey(evt.keyCode, false);
         };
 
-        var hero = createSprite('hero', 250, 460, 20, 20);
+        var hero = createSprite('hero', 250, 480, 20, 20);
         var laser = createSprite('laser', 5, -120, 10, 10);
 
         loop();
