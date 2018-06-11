@@ -78,7 +78,8 @@
             left: 250px;
             font-size: 100px;
             display: none;
-            color: #000000;
+            color: #ff0000;
+            visibility: hidden;
         }
 
     </style>
@@ -111,7 +112,6 @@
         let enemies = new Array();
         let score = 0;
         let livesNumber = 0;
-        let gBrakeFlag = true;
 
 
         function ensureBounds(sprite, ignoreY) {
@@ -188,10 +188,8 @@
         function gameOver() {
             console.log("gameover called");
             let endGame = document.getElementById("endGame");
-            endGame.style.color = "#ffffff";
-            livesNumber = 1;
-            gbreak = true;
-            loop(gbreak);
+            endGame.style.visibility = "visible";
+            loop(false);
         }
 
 
@@ -234,7 +232,6 @@
             score.innerHTML = tally;
         }
 
-        //livesNumber counting not working
         function checkCollisions() {
             for (var i = 0; i < enemies.length; i++) {
                 if (intersects(laser, enemies[i])) {
@@ -273,20 +270,22 @@
             }
         }
 
-
-        function loop() {
+// it's about where I place the boolean... need to stop settimeout with flag...
+        function loop(flag) {
             if (new Date().getTime() - lastLoopRun > 40) {
-                updatePositions();
-                handleControls();
-                checkCollisions();
+                if (flag === true) {
+                    updatePositions();
+                    handleControls();
+                    checkCollisions();
 
-                addEnemy();
+                    addEnemy();
 
-                showSprites();
+                    showSprites();
 
-                lastLoopRun = new Date().getTime();
+                    lastLoopRun = new Date().getTime();
+                }
             }
-            setTimeout('loop();', 10);
+            setTimeout('loop(true);', 10);
         }
 
         document.onkeydown = function(evt) {
@@ -300,7 +299,7 @@
         var hero = createSprite('hero', 250, 480, 20, 20);
         var laser = createSprite('laser', 5, -120, 10, 10);
 
-        loop();
+        loop(true);
 
     </script>
 </body>
