@@ -270,22 +270,26 @@
             }
         }
 
-// it's about where I place the boolean... need to stop settimeout with flag...
+        // this... https://stackoverflow.com/questions/43814422/how-to-pause-simple-canvas-game-made-with-js-and-html5
         function loop(flag) {
             if (new Date().getTime() - lastLoopRun > 40) {
-                if (flag === true) {
-                    updatePositions();
-                    handleControls();
-                    checkCollisions();
+                updatePositions();
+                handleControls();
+                checkCollisions();
 
-                    addEnemy();
+                addEnemy();
 
-                    showSprites();
+                showSprites();
 
-                    lastLoopRun = new Date().getTime();
-                }
+                lastLoopRun = new Date().getTime();
             }
-            setTimeout('loop(true);', 10);
+            if (flag === true) {
+                console.log('running');
+                setTimeout('loop(true);', 10);
+            } else {
+                console.log("stopped");
+                clearTimeout();
+            }
         }
 
         document.onkeydown = function(evt) {
