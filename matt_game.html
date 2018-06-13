@@ -97,213 +97,219 @@
 
 
     <script>
-        let LEFT_KEY = 37;
-        let UP_KEY = 38;
-        let RIGHT_KEY = 39;
-        let DOWN_KEY = 40;
-        let SPACE_KEY = 32;
-        let HERO_MOVEMENT = 20;
-        let LASER_SPEED = 17;
-        let ENEMY_SPEED = 7;
+        function main() {
 
-        let lastLoopRun = 0;
+            let LEFT_KEY = 37;
+            let UP_KEY = 38;
+            let RIGHT_KEY = 39;
+            let DOWN_KEY = 40;
+            let SPACE_KEY = 32;
+            let HERO_MOVEMENT = 20;
+            let LASER_SPEED = 17;
+            let ENEMY_SPEED = 7;
 
-        let controller = new Object();
-        let enemies = new Array();
-        let score = 0;
-        let livesNumber = 0;
+            let lastLoopRun = 0;
 
-
-        function ensureBounds(sprite, ignoreY) {
-            if (sprite.x < 40) {
-                sprite.x = 40;
-            }
-            if (!ignoreY && sprite.y < 40) {
-                sprite.y = 40;
-            }
-            if (sprite.x + sprite.w > 500) {
-                sprite.x = 500 - sprite.w;
-            }
-            if (!ignoreY && sprite.y + sprite.h > 500) {
-                sprite.y = 500 - sprite.h;
-            }
-        }
-
-        function createSprite(element, x, y, w, h) {
-            spriteObj = new Object();
-            spriteObj.element = element;
-            spriteObj.x = x;
-            spriteObj.y = y;
-            spriteObj.w = w;
-            spriteObj.h = h;
-            return spriteObj;
-        }
-
-        function addEnemy() {
-            if (randomNumber(50) === 0) {
-                let elementName = 'enemy' + randomNumber(10000000);
-                let enemy = createSprite(elementName, (randomNumber(440) + 40), 40, 30, 30);
-                enemies[enemies.length] = enemy;
-                var element = document.createElement('div');
-                element.id = enemy.element;
-                element.className = 'enemy';
-                document.body.insertBefore(element, document.body.childNodes[2]);
-            }
-        }
-
-        function toggleKey(keyCode, isPressed) {
-            if (keyCode == LEFT_KEY) {
-                controller.left = isPressed;
-            }
-            if (keyCode == RIGHT_KEY) {
-                controller.right = isPressed;
-            }
-            if (keyCode == UP_KEY) {
-                controller.up = isPressed;
-            }
-            if (keyCode == DOWN_KEY) {
-                controller.down = isPressed;
-            }
-            if (keyCode == SPACE_KEY) {
-                controller.space = isPressed;
-            }
-        }
-
-        function updatePositions() {
-            laser.y -= LASER_SPEED;
-            for (let i = 0; i < enemies.length; i++) {
-                enemies[i].y += ENEMY_SPEED;
-                ensureBounds(enemies[i], true);
-            }
-        }
-
-        function intersects(a, b) {
-            return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
-        }
-
-        function randomNumber(maxSize) {
-            return parseInt(Math.random() * maxSize);
-        }
-
-        function gameOver() {
-            console.log("gameover called");
-            let endGame = document.getElementById("endGame");
-            endGame.style.visibility = "visible";
-            loop(false);
-        }
+            let controller = new Object();
+            let enemies = new Array();
+            let score = 0;
+            let livesNumber = 0;
 
 
-        function setPosition(sprite) {
-            var e = document.getElementById(sprite.element);
-            e.style.left = sprite.x + 'px';
-            e.style.top = sprite.y + 'px';
-        }
 
-        function handleControls() {
-            if (controller.up) {
-                hero.y -= HERO_MOVEMENT;
-            }
-            if (controller.down) {
-                hero.y += HERO_MOVEMENT;
-            }
-            if (controller.left) {
-                hero.x -= HERO_MOVEMENT;
-            }
-            if (controller.right) {
-                hero.x += HERO_MOVEMENT;
-            }
-            if (controller.space & laser.y <= -120) {
-                laser.x = hero.x + 8;
-                laser.y = hero.y - 50;
-            }
-            ensureBounds(hero);
-        }
-
-        function showSprites() {
-            setPosition(hero);
-            setPosition(laser);
-            for (i = 0; i < enemies.length; i++) {
-                setPosition(enemies[i]);
-            }
-        }
-
-        function scoreUpdate(tally) {
-            let score = document.getElementById('score');
-            score.innerHTML = tally;
-        }
-
-        function checkCollisions() {
-            for (var i = 0; i < enemies.length; i++) {
-                if (intersects(laser, enemies[i])) {
-                    var element = document.getElementById(enemies[i].element);
-                    element.style.visibility = 'hidden';
-                    element.parentNode.removeChild(element);
-                    enemies.splice(i, 1);
-                    i--;
-                    laser.y = -120;
-                    score += 1;
-                    scoreUpdate(score);
-                } else if (intersects(hero, enemies[i])) {
-                    livesNumber += 1;
-                    var element = document.getElementById(enemies[i].element);
-                    var lives = document.getElementById("lives" + livesNumber);
-                    element.parentNode.removeChild(element);
-                    enemies.splice(i, 1);
-                    i--;
-                    hero.y = 480;
-                    hero.x = 250;
-                    lives.style.visibility = "hidden";
-                    console.log(livesNumber);
-                    if (livesNumber >= 3) {
-                        gameOver();
-                    }
-                } else if (enemies[i].y + enemies[i].h >= 500) {
-                    var element = document.getElementById(enemies[i].element);
-                    element.style.visibility = 'hidden';
-                    element.parentNode.removeChild(element);
-                    enemies.splice(i, 1);
-                    i--;
+            function ensureBounds(sprite, ignoreY) {
+                if (sprite.x < 40) {
+                    sprite.x = 40;
+                }
+                if (!ignoreY && sprite.y < 40) {
+                    sprite.y = 40;
+                }
+                if (sprite.x + sprite.w > 500) {
+                    sprite.x = 500 - sprite.w;
+                }
+                if (!ignoreY && sprite.y + sprite.h > 500) {
+                    sprite.y = 500 - sprite.h;
                 }
             }
-            if (laser.y < 20) {
-                laser.y = -120;
+
+            function createSprite(element, x, y, w, h) {
+                spriteObj = new Object();
+                spriteObj.element = element;
+                spriteObj.x = x;
+                spriteObj.y = y;
+                spriteObj.w = w;
+                spriteObj.h = h;
+                return spriteObj;
             }
+
+            function addEnemy() {
+                if (randomNumber(50) === 0) {
+                    let elementName = 'enemy' + randomNumber(10000000);
+                    let enemy = createSprite(elementName, (randomNumber(440) + 40), 40, 30, 30);
+                    enemies[enemies.length] = enemy;
+                    var element = document.createElement('div');
+                    element.id = enemy.element;
+                    element.className = 'enemy';
+                    document.body.insertBefore(element, document.body.childNodes[2]);
+                }
+            }
+
+            function toggleKey(keyCode, isPressed) {
+                if (keyCode == LEFT_KEY) {
+                    controller.left = isPressed;
+                }
+                if (keyCode == RIGHT_KEY) {
+                    controller.right = isPressed;
+                }
+                if (keyCode == UP_KEY) {
+                    controller.up = isPressed;
+                }
+                if (keyCode == DOWN_KEY) {
+                    controller.down = isPressed;
+                }
+                if (keyCode == SPACE_KEY) {
+                    controller.space = isPressed;
+                }
+            }
+
+            function updatePositions() {
+                laser.y -= LASER_SPEED;
+                for (let i = 0; i < enemies.length; i++) {
+                    enemies[i].y += ENEMY_SPEED;
+                    ensureBounds(enemies[i], true);
+                }
+            }
+
+            function intersects(a, b) {
+                return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+            }
+
+            function randomNumber(maxSize) {
+                return parseInt(Math.random() * maxSize);
+            }
+
+            function gameOver() {
+                console.log("gameover called");
+                let endGame = document.getElementById("endGame");
+                endGame.style.visibility = "visible";
+                loop();
+            }
+
+
+            function setPosition(sprite) {
+                var e = document.getElementById(sprite.element);
+                e.style.left = sprite.x + 'px';
+                e.style.top = sprite.y + 'px';
+            }
+
+            function handleControls() {
+                if (controller.up) {
+                    hero.y -= HERO_MOVEMENT;
+                }
+                if (controller.down) {
+                    hero.y += HERO_MOVEMENT;
+                }
+                if (controller.left) {
+                    hero.x -= HERO_MOVEMENT;
+                }
+                if (controller.right) {
+                    hero.x += HERO_MOVEMENT;
+                }
+                if (controller.space & laser.y <= -120) {
+                    laser.x = hero.x + 8;
+                    laser.y = hero.y - 50;
+                }
+                ensureBounds(hero);
+            }
+
+            function showSprites() {
+                setPosition(hero);
+                setPosition(laser);
+                for (i = 0; i < enemies.length; i++) {
+                    setPosition(enemies[i]);
+                }
+            }
+
+            function scoreUpdate(tally) {
+                let score = document.getElementById('score');
+                score.innerHTML = tally;
+            }
+
+            function checkCollisions() {
+                for (var i = 0; i < enemies.length; i++) {
+                    if (intersects(laser, enemies[i])) {
+                        var element = document.getElementById(enemies[i].element);
+                        element.style.visibility = 'hidden';
+                        element.parentNode.removeChild(element);
+                        enemies.splice(i, 1);
+                        i--;
+                        laser.y = -120;
+                        score += 1;
+                        scoreUpdate(score);
+                    } else if (intersects(hero, enemies[i])) {
+                        livesNumber += 1;
+                        var element = document.getElementById(enemies[i].element);
+                        var lives = document.getElementById("lives" + livesNumber);
+                        element.parentNode.removeChild(element);
+                        enemies.splice(i, 1);
+                        i--;
+                        hero.y = 480;
+                        hero.x = 250;
+                        lives.style.visibility = "hidden";
+                        console.log(livesNumber);
+                        if (livesNumber >= 3) {
+                            gameOver();
+                        }
+                    } else if (enemies[i].y + enemies[i].h >= 500) {
+                        var element = document.getElementById(enemies[i].element);
+                        element.style.visibility = 'hidden';
+                        element.parentNode.removeChild(element);
+                        enemies.splice(i, 1);
+                        i--;
+                    }
+                }
+                if (laser.y < 20) {
+                    laser.y = -120;
+                }
+            }
+
+            function loop(a) {
+                console.log(typeof arguments);
+                if (new Date().getTime() - lastLoopRun > 40) {
+                    updatePositions();
+                    handleControls();
+                    checkCollisions();
+
+                    addEnemy();
+
+                    showSprites();
+
+                    lastLoopRun = new Date().getTime();
+                }
+                if (typeof arguments == 'string') {
+                    console.log('running');
+                    setTimeout('loop();', 10);
+                } else {
+                    console.log("stopped");
+                    return;
+                }
+            }
+
+            document.onkeydown = function(evt) {
+                toggleKey(evt.keyCode, true);
+            };
+
+            document.onkeyup = function(evt) {
+                toggleKey(evt.keyCode, false);
+            };
+
+            var hero = createSprite('hero', 250, 480, 20, 20);
+            var laser = createSprite('laser', 5, -120, 10, 10);
+            
+            loop();
         }
 
-        // this... https://stackoverflow.com/questions/43814422/how-to-pause-simple-canvas-game-made-with-js-and-html5
-        function loop(flag) {
-            if (new Date().getTime() - lastLoopRun > 40) {
-                updatePositions();
-                handleControls();
-                checkCollisions();
-
-                addEnemy();
-
-                showSprites();
-
-                lastLoopRun = new Date().getTime();
-            }
-            if (flag === true) {
-                console.log('running');
-                setTimeout('loop(true);', 10);
-            } else {
-                console.log("stopped");
-                clearTimeout();
-            }
-        }
-
-        document.onkeydown = function(evt) {
-            toggleKey(evt.keyCode, true);
-        };
-
-        document.onkeyup = function(evt) {
-            toggleKey(evt.keyCode, false);
-        };
-
-        var hero = createSprite('hero', 250, 480, 20, 20);
-        var laser = createSprite('laser', 5, -120, 10, 10);
-
-        loop(true);
+        main();
 
     </script>
 </body>
