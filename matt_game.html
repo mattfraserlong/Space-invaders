@@ -105,14 +105,11 @@
         let HERO_MOVEMENT = 20;
         let LASER_SPEED = 17;
         let ENEMY_SPEED = 7;
-
         let lastLoopRun = 0;
-
         let controller = new Object();
         let enemies = new Array();
         let score = 0;
         let livesNumber = 0;
-        let status = 1;
 
 
 
@@ -271,42 +268,37 @@
                 laser.y = -120;
             }
         }
+        
+        //https://isaacsukin.com/news/2015/01/detailed-explanation-javascript-game-loops-and-timing
 
-        function loop(flag = 1) {
+        function loop(flag) {
+                if (new Date().getTime() - lastLoopRun > 40) {
+                    updatePositions();
+                    handleControls();
+                    checkCollisions();
 
-            if (new Date().getTime() - lastLoopRun > 40) {
-                updatePositions();
-                handleControls();
-                checkCollisions();
+                    addEnemy();
 
-                addEnemy();
+                    showSprites();
 
-                showSprites();
+                    lastLoopRun = new Date().getTime();
+                }
+                var timer = setTimeout('loop()', 10);
 
-                lastLoopRun = new Date().getTime();
-            }
-            if (flag === 1) {
-                console.log(flag);
-                setTimeout('loop()', 10);
-            } else {
-                console.log(flag);
-                clearTimeout();
-            }
         }
 
-        document.onkeydown = function(evt) {
-            toggleKey(evt.keyCode, true);
-        };
+            document.onkeydown = function(evt) {
+                toggleKey(evt.keyCode, true);
+            };
 
-        document.onkeyup = function(evt) {
-            toggleKey(evt.keyCode, false);
-        };
+            document.onkeyup = function(evt) {
+                toggleKey(evt.keyCode, false);
+            };
 
-        var hero = createSprite('hero', 250, 480, 20, 20);
-        var laser = createSprite('laser', 5, -120, 10, 10);
-        console.log(status);
+            var hero = createSprite('hero', 250, 480, 20, 20);
+            var laser = createSprite('laser', 5, -120, 10, 10);
 
-        loop();
+            loop(1);
 
     </script>
 </body>
