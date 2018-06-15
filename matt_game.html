@@ -268,37 +268,46 @@
                 laser.y = -120;
             }
         }
-        
+
         //https://isaacsukin.com/news/2015/01/detailed-explanation-javascript-game-loops-and-timing
-
+//https://stackoverflow.com/questions/29450671/stopping-multiple-settimeout-instances
+        function stopAllTimeouts() {
+            console.log("stopAllTimeouts called");
+            var id = window.setTimeout(null, 0);
+            while (id--) {
+                window.clearTimeout(id);
+            }
+        }
+// workout how many settimeouts are running then stop them all.
         function loop(flag) {
-                if (new Date().getTime() - lastLoopRun > 40) {
-                    updatePositions();
-                    handleControls();
-                    checkCollisions();
+            if (new Date().getTime() - lastLoopRun > 40) {
+                console.log(flag);
+                updatePositions();
+                handleControls();
+                checkCollisions();
 
-                    addEnemy();
+                addEnemy();
 
-                    showSprites();
+                showSprites();
 
-                    lastLoopRun = new Date().getTime();
-                }
-                var timer = setTimeout('loop()', 10);
+                lastLoopRun = new Date().getTime();
 
+            }
+            var timer = setTimeout('loop(1)', 10);
         }
 
-            document.onkeydown = function(evt) {
-                toggleKey(evt.keyCode, true);
-            };
+        document.onkeydown = function(evt) {
+            toggleKey(evt.keyCode, true);
+        };
 
-            document.onkeyup = function(evt) {
-                toggleKey(evt.keyCode, false);
-            };
+        document.onkeyup = function(evt) {
+            toggleKey(evt.keyCode, false);
+        };
 
-            var hero = createSprite('hero', 250, 480, 20, 20);
-            var laser = createSprite('laser', 5, -120, 10, 10);
+        var hero = createSprite('hero', 250, 480, 20, 20);
+        var laser = createSprite('laser', 5, -120, 10, 10);
 
-            loop(1);
+        loop(1);
 
     </script>
 </body>
