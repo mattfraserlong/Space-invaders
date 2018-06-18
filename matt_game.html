@@ -78,7 +78,6 @@
             left: 80px;
             font-size: 70px;
             color: #ff0000;
-            visibility: hidden;
             position: absolute;
         }
 
@@ -95,7 +94,6 @@
             font-size: 16px;
             margin: 4px 2px;
             cursor: pointer;
-            visibility: hidden;
         }
 
     </style>
@@ -114,22 +112,45 @@
 
 
     <script>
-        let LEFT_KEY = 37;
-        let UP_KEY = 38;
-        let RIGHT_KEY = 39;
-        let DOWN_KEY = 40;
-        let SPACE_KEY = 32;
-        let HERO_MOVEMENT = 10;
-        let LASER_SPEED = 5;
-        let ENEMY_SPEED = 2;
-        let lastLoopRun = 0;
-        let controller = new Object();
-        let enemies = new Array();
-        let score = 0;
-        let livesNumber = 0;
-        let active = true;
-        let gameOverSign = document.getElementById("endGame");
-        let gameOverButton = document.getElementById("restart");
+        // controller variables assigned
+        const LEFT_KEY = 37;
+        const UP_KEY = 38;
+        const RIGHT_KEY = 39;
+        const DOWN_KEY = 40;
+        const SPACE_KEY = 32;
+        
+        //restart DOM elements declared
+        var gameOverSign = document.getElementById("endGame");
+        var gameOverButton = document.getElementById("restart");
+
+        // game state variables declared
+        var LASER_SPEED;
+        var ENEMY_SPEED;
+        var HERO_MOVEMENT;
+        var active;
+        var enemies;
+        var score;
+        
+        //game object variables declared
+        var controller;
+        var livesNumber;
+
+        // function to declare initial gamestate variables
+        function init() {
+            HERO_MOVEMENT = 10;
+            LASER_SPEED = 5;
+            ENEMY_SPEED = 2;
+            controller = new Object();
+            enemies = new Array();
+            score = 0;
+            livesNumber = 0;
+            active = true;
+            gameOverSign.style.visibility = "hidden";
+            gameOverButton.style.visibility = "hidden";
+            
+            
+            requestAnimationFrame(loop);
+        }
 
 
         function ensureBounds(sprite, ignoreY) {
@@ -206,7 +227,6 @@
 
         function gameOver() {
             active = false;
-            console.log(gameOverSign);
             gameOverSign.style.visibility = "visible";
             gameOverButton.style.visibility = "visible";
             gameOverButton.addEventListener("click", function() {
@@ -315,7 +335,7 @@
         var hero = createSprite('hero', 250, 480, 20, 20);
         var laser = createSprite('laser', 5, -120, 10, 10);
 
-        requestAnimationFrame(loop);
+        init();
 
     </script>
 </body>
