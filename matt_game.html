@@ -120,6 +120,29 @@
         but move to keeping permanent scores
         */
         
+        
+        //interrogating high score DB
+        function getdbData() {
+        //setting up GET request for high scores from db
+            var HttpClient = function() {
+                this.get = function(aUrl, aCallback) {
+                    var anHttpRequest = new XMLHttpRequest();
+                    anHttpRequest.onreadystatechange = function() { 
+                    if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
+                        aCallback(anHttpRequest.responseText);
+                    } 
+                anHttpRequest.open( "GET", aUrl, true );            
+                anHttpRequest.send( null );
+                }
+            }
+        
+            //using HttpClient to get data
+            var client = new HttpClient();
+            client.get('https://space-invaders-high-scores-database.glitch.me/api/space-invader', function(response) {
+            console.log(response)
+            });
+        }
+        
         // controller variables assigned
         const LEFT_KEY = 37;
         const UP_KEY = 38;
@@ -145,8 +168,8 @@
 
         // function to declare initial gamestate variables
         function init() {
-            HERO_MOVEMENT = 10;
-            LASER_SPEED = 5;
+            HERO_MOVEMENT = 5;
+            LASER_SPEED = 7;
             ENEMY_SPEED = 2;
             controller = new Object();
             enemies = new Array();
@@ -155,9 +178,9 @@
             active = true;
             gameOverSign.style.visibility = "hidden";
             gameOverButton.style.visibility = "hidden";
+            getdbData();
 
-
-            requestAnimationFrame(loop);
+            window.requestAnimationFrame(loop);
         }
 
         // keep sprites on screen
@@ -243,6 +266,11 @@
             resetLives();
             init();
         }
+        
+        function checkhighScore() {
+            console.log(score);
+            
+        }
 
         function resetScore() {
             let score = document.getElementById("score");
@@ -299,7 +327,6 @@
                     hero.y = 480;
                     hero.x = 250;
                     lives.style.visibility = "hidden";
-                    console.log(livesNumber);
                     if (livesNumber >= 3) {
                         gameOver();
                     }
