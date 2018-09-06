@@ -95,6 +95,13 @@
             margin: 4px 2px;
             cursor: pointer;
         }
+        #form {
+            position: absolute;
+            background-color: #00FF00;
+            top: 200px;
+            left: 190px;
+            padding: 20px;
+        }
 
     </style>
 </head>
@@ -109,6 +116,12 @@
     <div class="lives" id="lives3"></div>
     <div id="endGame">Game Over</div>
     <div id="restart" class="button">Restart</div>
+    <div id="form">
+        <form>
+            Player name:<br>
+            <input type="text" id="input" name="firstname" oninput="playerName()"><br>
+        </form>
+    </div>
 
 
     <script>
@@ -119,6 +132,31 @@
         or just use array to begin with
         but move to keeping permanent scores
         */
+        
+        // controller variables assigned
+        const LEFT_KEY = 37;
+        const UP_KEY = 38;
+        const RIGHT_KEY = 39;
+        const DOWN_KEY = 40;
+        const SPACE_KEY = 32;
+
+        //restart DOM elements declared
+        var gameOverSign = document.getElementById("endGame");
+        var gameOverButton = document.getElementById("restart");
+       
+        
+
+        // game state variables declared
+        var LASER_SPEED;
+        var ENEMY_SPEED;
+        var HERO_MOVEMENT;
+        var active;
+        var enemies;
+        var score;
+
+        //game object variables declared
+        var controller;
+        var livesNumber;
         
         
         //interrogating high score DB
@@ -142,29 +180,6 @@
             console.log(response)
             });
         }
-        
-        // controller variables assigned
-        const LEFT_KEY = 37;
-        const UP_KEY = 38;
-        const RIGHT_KEY = 39;
-        const DOWN_KEY = 40;
-        const SPACE_KEY = 32;
-
-        //restart DOM elements declared
-        var gameOverSign = document.getElementById("endGame");
-        var gameOverButton = document.getElementById("restart");
-
-        // game state variables declared
-        var LASER_SPEED;
-        var ENEMY_SPEED;
-        var HERO_MOVEMENT;
-        var active;
-        var enemies;
-        var score;
-
-        //game object variables declared
-        var controller;
-        var livesNumber;
 
         // function to declare initial gamestate variables
         function init() {
@@ -181,6 +196,13 @@
             getdbData();
 
             window.requestAnimationFrame(loop);
+        }
+        
+        //get player name
+        function playerName() {
+            var nameValue = document.getElementById("input").value;
+            console.log(nameValue)
+            init();
         }
 
         // keep sprites on screen
@@ -406,8 +428,6 @@
         var hero = createSprite('hero', 250, 480, 20, 20);
         var laser = createSprite('laser', 5, -120, 10, 10);
         
-        // call init() to declare variables and call game loop
-        init();
 
     </script>
 </body>
